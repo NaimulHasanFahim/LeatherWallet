@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Banking website backend",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "author": "Naimul Hasan & Md. Sabbir Irfan Chy",
   "license": "MIT",
