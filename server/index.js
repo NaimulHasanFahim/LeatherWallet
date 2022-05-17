@@ -6,6 +6,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.js';
 import registerRoutes from './routes/register.js';
+import transactionRoutes from './routes/transaction.js';
+
 
 const dotenv1 = dotenv.config();
 const port = 5000;
@@ -31,6 +33,7 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 // app.use(bodyParser.urlencoded({extended: true}));
 
 
+app.use('/transaction', transactionRoutes);
 app.use('/auth', authRoutes);
 app.use('/register', registerRoutes);
 
