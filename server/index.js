@@ -9,18 +9,11 @@ import registerRoutes from './routes/register.js';
 import transactionRoutes from './routes/transaction.js';
 
 
-const dotenv1 = dotenv.config();
-const port = 5000;
+dotenv.config();
 
 
 const app = express();
 
-const corsOptions = {
-    credentials:true,
-    optionSuccessStatus: 200,
-    origin :  'http://localhost:3000',
-
-}
 
 app.use(cors());
 // app.use(cors(corsOptions));
@@ -38,7 +31,12 @@ app.use('/auth', authRoutes);
 app.use('/register', registerRoutes);
 
 
-const CONNECTION_URL = 'mongodb+srv://webprojectadmin:webprojectadmin@webproject.pyify.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
+// console.log(PORT);
+// console.log(process.env.CONNECTION_URL);
+const CONNECTION_URL = 'mongodb+srv://nhfahim:nhfahimadmin@cluster0.3difnn9.mongodb.net/bankproject?retryWrites=true&w=majority';
 
-mongoose.connect(CONNECTION_URL).then(()=> app.listen(PORT, ()=> console.log(`Server running on port : ${PORT}`))).catch((error)=>console.log(error.message));
+mongoose.connect(CONNECTION_URL,{ useNewUrlParser: true, useUnifiedTopology: true})
+.then(() => app.listen(PORT, () => console.log('Server running on port: '+PORT)))
+.catch((error) =>console.log(error.message));
+// mongoose.set('useFindAndModify', false);

@@ -1,86 +1,58 @@
-import express from 'express';
-// import mongoose from 'mongoose';
-// import PostMessage from '../models/postMessage.js';
-import fs from 'fs';
-import jwt from 'jsonwebtoken';
+import bcrypt from "bcryptjs";
+import express from "express";
+import jwt from "jsonwebtoken";
+import User from "../models/userSchema.js";
+
 const router = express.Router();
 
-///DATABASEE
-let USERS = [];
+const register = async (req, res) => {
+  // console.log(req.body);
+  const { address, email, username, password, phoneNumber, confirmPassword } =
+    req.body;
+  // console.log(req.body);
 
-
-fs.readFile('./../server/database/user.json', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
+  if (
+    !username ||
+    !address ||
+    !email ||
+    !password ||
+    !phoneNumber ||
+    !confirmPassword
+  ) {
+    res.status(200).json({ message: "All field of data must be required" });
     return;
   }
-  USERS = JSON.parse(data);
-  // console.log(data);
-});
 
+  try {
+    // console.log(phoneNumber);
+    const existingUser = await User.findOne({email})
+    // console.log(existingUser);
 
-///DATABASE
+    if (existingUser)
+      return res.status(400).json({ message: "User already exists." });
 
-const register = async (req, res)=>{
+    if (password !== confirmPassword)
+      return res.status(400).json({ message: "Passwords don't match." });
 
-  console.log(req.body);
-
-  const {name, address, email, username, password} = req.body;
-  
-  if(!name|| !address || !email || !username || !password ){
-    res.status(200).json({ message: 'All field of data must be required' });
-    return;
-  }
-    // res.status(200).json({ message: 'Success' });
-  let exists = false;
-  USERS.map((user)=>{
-    if(user.username == username){
-      res.status(200).json({ message: 'Username already exists!' });
-      exists=true;
-      return;
-    }
-  })
-
-  const USER = {
-    name : name,
-    address : address,
-    email : email,
-    username : username,
-    password : password,
-    balance: 0,
+    const hashedPassword = await bcrypt.hash(password, 12);
+    // console.log(phoneNumber);
+    const result = await User.create({
+      email,
+      password: hashedPassword,
+      username,
+      address,
+      accountNumber : phoneNumber,
+    });
+    const token = jwt.sign({ email: result.email, id: result._id }, "KEY", {
+      expiresIn: "1h",
+    });
+    // res.cookie("token", token,{httpOnly:true}).send('Successfully registration completed!');
+    res.status(200).json({ result, token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong." });
   }
 
-  if(!exists){
-    USERS.push(USER);
-  fs.writeFile('./../server/database/user.json', JSON.stringify(USERS), (err) => {
-    if (err){
-      res.status(400).json({ message: 'Username registration unsuccessful!' });
-      return;
-    }
-    else {
-      console.log("File written successfully");
-      // res.status(200).json({ message: 'Successfully registration completed!' });
-      // console.log("The written has the following contents:");
-      // console.log(fs.readFileSync("books.txt", "utf8"));
-
-      const token = jwt.sign({
-      username : USER.username
-    },"KEY");
-    
-    try {
-      res.cookie("token", token,{httpOnly:true}).send('Successfully registration completed!');
-    } catch (error) {
-      console.log(error.message);
-      // res.status(400).json({message : 'Token failed'});
-    }
-
-    }
-  });
-  }
-
-
-  
-  
-}
+};
 
 export default register;
