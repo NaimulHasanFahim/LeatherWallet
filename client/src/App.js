@@ -1,12 +1,14 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import HomePage from './components/Homepage';
+import './App.css';
+import Home from "./pages/Home";
+
 const App = ()=>{
     return (
     <BrowserRouter>
         <Routes>
-            {/* <Route path="/" element={<Login/>}/> */}
-            <Route path="/" element={<HomePage/>}/>
+            {/* <Route path="/nav" element={<Navbar/>}/> */}
+            <Route path="/" element={<Home/>}/>
             {/* <Route element={<PageNotFound/>}/> */}
         </Routes>
     </BrowserRouter>
