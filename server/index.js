@@ -9,10 +9,8 @@ import registerRoutes from './routes/register.js';
 import transactionRoutes from './routes/transaction.js';
 
 
-dotenv.config();
-
-
 const app = express();
+dotenv.config();
 
 
 app.use(cors());
@@ -26,17 +24,14 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 // app.use(bodyParser.urlencoded({extended: true}));
 
 
-app.use('/transaction', transactionRoutes);
-app.use('/auth', authRoutes);
-app.use('/register', registerRoutes);
+app.use('/api/transaction', transactionRoutes);
+app.use('/api/user', authRoutes);
+app.use('/api/register', registerRoutes);
 
 
 const PORT = process.env.PORT || 8000;
-// console.log(PORT);
-// console.log(process.env.CONNECTION_URL);
-const CONNECTION_URL = 'mongodb+srv://nhfahim:nhfahimadmin@cluster0.3difnn9.mongodb.net/bankproject?retryWrites=true&w=majority';
 
-mongoose.connect(CONNECTION_URL,{ useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(process.env.CONNECTION_URL,{ useNewUrlParser: true, useUnifiedTopology: true})
 .then(() => app.listen(PORT, () => console.log('Server running on port: '+PORT)))
 .catch((error) =>console.log(error.message));
 // mongoose.set('useFindAndModify', false);

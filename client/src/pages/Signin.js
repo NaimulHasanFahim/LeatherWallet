@@ -1,6 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { signin } from "../actions/auth";
+
 
 const Container = styled.div`
 min-height: 692px;
@@ -11,6 +14,7 @@ right: 0;
 top: 0;
 z-index: 0;
 overflow: hidden;
+
 background: linear-gradient(
     108deg,
     rgba(1, 147, 86, 1) 0%,
@@ -25,7 +29,7 @@ flex-direction: column;
 justify-content: center;
 
 @media screen and (max-width: 400px){
-    height: 80px;
+    height: 100%;
 }
 
 `;
@@ -112,19 +116,44 @@ color: #fff;
 font-size: 14px;
 `;
 
-const Signin = () => {
+const initialState = { password: "", accountNumber: "" };
+
+const Signin = ({user, setUser}) => {
+    const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState(initialState);
+  const { isFetching, error } = useSelector((state) => state.user);
+  // console.log(user);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    try {
+        dispatch(signin(formData, setUser));
+        navigate('/');    
+    } catch (error) {
+        console.log(error);
+    }
+    
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // console.log(formData);
+  };
+
   return (
     <>
     <Container>
         <FormWrap>
             <Icon to='/'>dolla</Icon>
             <FormContent>
-                <Form action='#'>
+                <Form onSubmit={handleSubmit}>
                     <FormH1>Sign in to your account</FormH1>
-                    <FormLabel htmlFor='for'>Email</FormLabel>
-                    <FormInput type='email' required/>
+                    <FormLabel htmlFor='for'>Account Number</FormLabel>
+                    <FormInput name="accountNumber" onChange={handleChange}  required/>
                     <FormLabel htmlFor='for'>Password</FormLabel>
-                    <FormInput type='password' required/>
+                    <FormInput name="password"  onChange={handleChange}  type='password' required/>
                     <FormButton type='submit'>Continue</FormButton>
                     <Text>Forgot password</Text>
                 </Form>

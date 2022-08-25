@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { FaBars } from 'react-icons/fa';
-import { Link as LinkR } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { Link as LinkR, useNavigate } from 'react-router-dom';
 import { animateScroll as scroll, Link as LinkS } from 'react-scroll';
 import styled from 'styled-components';
-
+import { signout } from "../actions/auth";
 const Nav = styled.nav`
     background: ${({scrollNav})=>(scrollNav? '#000' : 'transparent')};
     height: 80px;
@@ -99,6 +100,25 @@ const NavBtn = styled.nav`
 `;
 
 
+const NavBtnSignout = styled.button`
+border-radius: 50px;
+background: #01bf71;
+white-space: nowrap;
+color: #010606;
+text-decoration: none;
+padding: 10px 22px;
+outline: none;
+font-size: 16px;
+border: none;
+cursor: pointer;
+transition: all 0.2s ease-in-out;
+&:hover{
+    transition: all 0.2s ease-in-out;
+    background: #fff;
+    color: #010606;
+}
+`;
+
 const NavBtnLinks = styled(LinkR)`
     border-radius: 50px;
     background: #01bf71;
@@ -119,8 +139,17 @@ const NavBtnLinks = styled(LinkR)`
 `;
 
 
-const Navbar = ({toggle}) => {
+const Navbar = ({toggle, user, setUser}) => {
     const [scrollNav, setScrollNav] = useState(false);
+   
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    console.log(user);
+  const Signout =( )=>{
+    dispatch(signout(navigate, setUser)
+    );
+  }
+
 
     const changeNav = () =>{
         if(window.scrollY>=80){
@@ -184,9 +213,12 @@ const Navbar = ({toggle}) => {
                     >Sign Up</NavLinks>
                 </NavItem>
             </NavMenu>
-            <NavBtn>
+
+            {user == null ? (<NavBtn>
                 <NavBtnLinks to="/signin">Sign In</NavBtnLinks>
-            </NavBtn>
+            </NavBtn>) : (<NavBtn>
+                <NavBtnSignout  onClick={Signout}>Sign Out</NavBtnSignout>
+            </NavBtn>)}
         </NavbarContainer>
      </Nav>
 

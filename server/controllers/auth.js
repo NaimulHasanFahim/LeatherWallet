@@ -1,27 +1,13 @@
 import bcrypt from "bcryptjs";
 import express from "express";
-// import PostMessage from '../models/postMessage.js';
-import fs from "fs";
 import jwt from "jsonwebtoken";
-///DATABASE
+
 import User from "../models/userSchema.js";
 const router = express.Router();
 
-///DATABASEE
-let USERS = [];
-
-fs.readFile("./../server/database/user.json", "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  USERS = JSON.parse(data);
-  // console.log(data);
-});
-
 
 export const login = async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   const { accountNumber, password } = req.body;
   if (!accountNumber || !password) {
     res.status(200).json({ message: "All field of data must be required" });

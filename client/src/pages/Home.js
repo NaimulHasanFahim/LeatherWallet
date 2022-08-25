@@ -8,16 +8,16 @@ import Services from '../components/Services';
 import Sidebar from '../components/Sidebar';
 
 
-const Home = () => {
+const Home = ({user, setUser}) => {
     const [isOpen, setisOpen] = useState(false);
-
+    
     const toggle = ()=>{
         setisOpen(!isOpen);
     }
   return (
     <>
     <Sidebar isOpen={isOpen} toggle={toggle}/>
-    <Navbar toggle={toggle}/>
+    <Navbar toggle={toggle} user={user} setUser={setUser}/>
     <HeroElements/>
     <InfoSection {...homeObjOne}/>
     <InfoSection {...homeObjTwo}/>
