@@ -21,6 +21,7 @@ const TOKEN = currentUser?.token;
 //   });
 
 
+export const getAllTransactionByUser = (id) => API.get(`/transaction/alltransaction/${id}`);
 export const signIn = (formData) => API.post('/user/signin', formData);
 export const signUp = (formData) => API.post('/user/signup', formData);
 export const signOut = (formData) => API.post('/user/signout', formData);

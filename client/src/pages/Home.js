@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { homeObjOne, homeObjThree, homeObjTwo } from '../components/Data';
 import Footer from '../components/Footer';
 import HeroElements from '../components/HeroElements';
@@ -8,12 +8,8 @@ import Services from '../components/Services';
 import Sidebar from '../components/Sidebar';
 
 
-const Home = ({user, setUser}) => {
-    const [isOpen, setisOpen] = useState(false);
+const Home = ({user, setUser, isOpen, toggle}) => {
     
-    const toggle = ()=>{
-        setisOpen(!isOpen);
-    }
   return (
     <>
     <Sidebar isOpen={isOpen} toggle={toggle}/>

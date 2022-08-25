@@ -5,7 +5,6 @@ import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.js';
-import registerRoutes from './routes/register.js';
 import transactionRoutes from './routes/transaction.js';
 
 
@@ -26,7 +25,7 @@ app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 
 app.use('/api/transaction', transactionRoutes);
 app.use('/api/user', authRoutes);
-app.use('/api/register', registerRoutes);
+// app.use('/api/register', registerRoutes);
 
 
 const PORT = process.env.PORT || 8000;

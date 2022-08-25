@@ -19,12 +19,13 @@ export const signin = (formData, setUser) => async (dispatch) => {
     }
 }
 
-export const signup = (formData) => async (dispatch) => {
+export const signup = (formData, setUser) => async (dispatch) => {
     dispatch(signupStart());
 
     try {
         const { data } = await api.signUp(formData);
-        console.log(data);
+        // console.log(data);
+        setUser(data.result);
         dispatch(signupSuccess(data));
         
     } catch (error) {

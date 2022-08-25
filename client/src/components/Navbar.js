@@ -90,6 +90,19 @@ const NavLinks = styled(LinkS)`
 `;
 
 
+const NavLinkR = styled(LinkR)`
+    color: #fff;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    padding: 0 1rem;
+    height: 100%;
+    cursor: pointer;
+    &.active{
+        border-bottom: 3px solid #01bf71;
+    }
+`;
+
 const NavBtn = styled.nav`
     display: flex;
     align-items: center;
@@ -144,13 +157,12 @@ const Navbar = ({toggle, user, setUser}) => {
    
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log(user);
+    // console.log(user);
   const Signout =( )=>{
     dispatch(signout(navigate, setUser)
     );
   }
-
-
+ 
     const changeNav = () =>{
         if(window.scrollY>=80){
             setScrollNav(true)
@@ -203,7 +215,7 @@ const Navbar = ({toggle, user, setUser}) => {
                     offset={-80}
                     >Services</NavLinks>
                 </NavItem>
-                <NavItem>
+                {user==null ? (<NavItem>
                     <NavLinks to="signup"
                     smooth={true}
                     duration={500}
@@ -211,7 +223,17 @@ const Navbar = ({toggle, user, setUser}) => {
                     exact="true"
                     offset={-80}
                     >Sign Up</NavLinks>
-                </NavItem>
+                </NavItem>) : (<NavItem>
+                    <NavLinkR to="/profile"
+                    smooth={true}
+                    duration={500}
+                    spy={true}
+                    exact="true"
+                    offset={-80}
+                    >Profile</NavLinkR>
+                </NavItem>)}
+                
+                
             </NavMenu>
 
             {user == null ? (<NavBtn>

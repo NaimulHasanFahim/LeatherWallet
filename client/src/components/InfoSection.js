@@ -1,7 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "./ButtonElement";
-
 const InfoContainer = styled.div`
   color: #fff;
   background: ${({ lightBg }) => (lightBg ? "f9f9f9" : "#010606")};
@@ -120,8 +120,14 @@ const InfoSection = ({
   lightText,
   primary,
   dark,
-  dark2
+  dark2, buttonUrl
 }) => {
+  const navigate = useNavigate();
+
+  const handleButtonClick = ()=>{
+    navigate(buttonUrl);
+  }
+
   return (
     <>
       <InfoContainer lightBg={lightBg} id={id}>
@@ -133,7 +139,7 @@ const InfoSection = ({
                 <Heading lightText={lightText}>{headline}</Heading>
                 <Subtitle darkText={darkText}>{description}</Subtitle>
                 <BtnWrap>
-                  <Button to="home"
+                  <Button to="home" onClick={handleButtonClick}
                   smooth={true}
                   duration={500}
                   spy={true}

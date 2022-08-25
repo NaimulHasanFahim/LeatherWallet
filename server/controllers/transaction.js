@@ -77,6 +77,28 @@ export const withdraw = async (req, res) => {
   });
 };
 
+export const getAllTransactionById = async (req, res) => {
+  const { id} = req.params;
+  console.log(id);
+  let transactionList = [];
+  try {
+    Transaction.find()
+      .populate("sender")
+      .populate("reciever")
+      .exec(function (err, all_transaction) {
+        if (err) return handleError(err);
+        // console.log(all_transaction);
+        // console.log(all_transaction[0].sender.accountNumber);
+        var output =  all_transaction.filter( transaction=> transaction.sender.accountNumber == id, transaction=> transaction.reciever.accountNumber == id);
+        transactionList = output;
+        // console.log(output);
+        res.status(200).send(transactionList);
+      });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 function getData(data) {
   let { username, password, address, email, balance, accountNumber } = data;
   let newData = { username, password, address, email, balance, accountNumber };
@@ -109,8 +131,9 @@ export const payment = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.send({ message: "Incorrect password" });
     } else if (!senderExist) {
-      return res
-        .send({ message: "No account with the sender account number." });
+      return res.send({
+        message: "No account with the sender account number.",
+      });
     } else if (senderExist.balance < amount) {
       return res.send({ message: "Not a valid ammount !" });
     }
@@ -119,8 +142,9 @@ export const payment = async (req, res) => {
     const recieverExist = temp[0];
 
     if (!recieverExist) {
-      return res
-        .send({ message: "No account with the reciever account number." });
+      return res.send({
+        message: "No account with the reciever account number.",
+      });
     }
     // console.log(senderExist);
     // console.log(recieverExist);
@@ -160,12 +184,10 @@ export const payment = async (req, res) => {
     // console.log(data);
     const result = await Transaction.create(data);
     console.log(result);
-    res
-      .status(200)
-      .send({
-        message: "Transaction Successfully",
-        Transaction_ID: result._doc._id.toString(),
-      });
+    res.status(200).send({
+      message: "Transaction Successfully",
+      Transaction_ID: result._doc._id.toString(),
+    });
   } catch (error) {
     console.log(error);
   }
