@@ -89,6 +89,32 @@ padding-bottom: -10px;
 border-radius: 20px;
 `;
 
+const SingleTransaction = styled.div`
+background: '#f9f9f9f';
+/* background: ${({ redBg }) => (redBg ? "#931314" : "#931314")}; */
+margin-top: 5px;
+padding: 10px 10px;
+z-index: 1;
+box-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+`;
+
+const H3 = styled.h3`
+  color: black;
+`;
+
+const PaymentLeftWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const H1 = styled.h1`
+  color: black;
+  margin-top: 20px;
+`;
 
 const Profile = ({isOpen , toggle, user, setUser}) => {
   const dispatch = useDispatch();
@@ -106,7 +132,9 @@ const Profile = ({isOpen , toggle, user, setUser}) => {
   
   
   const transaction = useSelector(state => state.transaction)
-  console.log(transaction);
+  const temp = transaction.alltransaction;
+  console.log(temp);
+  
   return (
     <>
     
@@ -117,10 +145,18 @@ const Profile = ({isOpen , toggle, user, setUser}) => {
             <FormContent>
               <ProfileBox>
                 <ProfileImg src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtLFlEKjQHLInSZGzlfwIAnCrqCOF3chDGhR6ZKfSw&s'}/>
-                <h3>{user.username}</h3>
-                <h3>Balance : {user.balance}</h3>
+                <H3>{user.username}</H3>
+                <H3>Balance : {user.balance}</H3>
                <TransactionContainer>
-                <h1>All Transactions</h1>
+                <H1>All Transactions</H1>
+                {JSON.stringify(temp) !== '{}' && temp.map((item)=>(<SingleTransaction key={item._id}>
+                  <PaymentLeftWrapper><H3>Method : Payment</H3> 
+                  <h5> reciever : {item.reciever.accountNumber}</h5>
+                  <h6>Transaction ID : {item._id}</h6>
+                  </PaymentLeftWrapper>
+                  <H3>Amount : {item.amount}</H3>
+                </SingleTransaction>))}
+                
                 </TransactionContainer>
                </ProfileBox>
              </FormContent>

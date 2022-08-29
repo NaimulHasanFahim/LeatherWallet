@@ -49,7 +49,7 @@ export const signout = (req, res) => {
 
 
 export const signup = async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   const { address, email, username, password, phoneNumber, confirmPassword } =
     req.body;
   console.log(req.body);

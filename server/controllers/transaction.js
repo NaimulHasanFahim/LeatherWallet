@@ -1,81 +1,9 @@
 import bcrypt from "bcryptjs";
 import express from "express";
-// import mongoose from 'mongoose';
-// import PostMessage from '../models/postMessage.js';
-import fs from "fs";
 import Transaction from "../models/transactionSchema.js";
 import User from "../models/userSchema.js";
 const router = express.Router();
-///DATABASEE
-let USERS = [];
 
-fs.readFile("./../server/database/user.json", "utf8", (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  USERS = JSON.parse(data);
-  // console.log(data);
-});
-
-///DATABASE
-
-export const deposit = async (req, res) => {
-  console.log(req.body);
-  const amount = parseInt(req.body.amount);
-  const username = req.body.username;
-  if (!amount) {
-    res.status(400).json({ message: "Amount not to be nulled" });
-  }
-  // res.status(200).json({ message: 'Success' });
-  USERS.map((user) => {
-    if (user.username == username) {
-      user.balance += amount;
-
-      fs.writeFile(
-        "./../server/database/user.json",
-        JSON.stringify(USERS),
-        (err) => {
-          if (err) {
-            res.send("Amount not deposited");
-          } else {
-            res.status(200).send("Amount successfully deposited");
-          }
-        }
-      );
-    }
-  });
-};
-
-export const withdraw = async (req, res) => {
-  // console.log(req.body);
-  const amount = parseInt(req.body.amount);
-  const username = req.body.username;
-  if (!amount) {
-    res.status(400).json({ message: "Amount not to be nulled" });
-  }
-  // res.status(200).json({ message: 'Success' });
-  USERS.map((user) => {
-    if (user.username == username) {
-      if (amount > user.balance) {
-        return res.send("Not enough balance in the account");
-      }
-      user.balance -= amount;
-
-      fs.writeFile(
-        "./../server/database/user.json",
-        JSON.stringify(USERS),
-        (err) => {
-          if (err) {
-            res.send("Amount not withdrawn");
-          } else {
-            res.status(200).send("Amount successfully withdrawn");
-          }
-        }
-      );
-    }
-  });
-};
 
 export const getAllTransactionById = async (req, res) => {
   const { id} = req.params;
@@ -87,15 +15,13 @@ export const getAllTransactionById = async (req, res) => {
       .populate("reciever")
       .exec(function (err, all_transaction) {
         if (err) return handleError(err);
-        // console.log(all_transaction);
-        // console.log(all_transaction[0].sender.accountNumber);
         var output =  all_transaction.filter( transaction=> transaction.sender.accountNumber == id, transaction=> transaction.reciever.accountNumber == id);
         transactionList = output;
         // console.log(output);
-        res.status(200).send(transactionList);
+        return res.status(200).send(transactionList);
       });
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    return res.status(404).json({ message: error.message });
   }
 };
 
@@ -113,11 +39,11 @@ export const payment = async (req, res) => {
 
   try {
     if (!sender || !reciever || !req.body.password) {
-      res.send({ message: "All field of data must be required" });
+      return res.send({ message: "All field of data must be required" });
     }
 
     if (!amount) {
-      res.send({ message: "Amount not to be nulled" });
+      return res.send({ message: "Amount not to be nulled" });
     }
 
     // find( { "name.last": "Hopper" } )
