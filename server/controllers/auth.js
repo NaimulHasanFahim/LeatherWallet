@@ -98,7 +98,18 @@ export const signup = async (req, res) => {
 
 };
 
-
+export const  getUserInfo = async (req, res)=>{
+  console.log(req.params.id);
+  try {
+    const existingUser = await User.findById(req.params.id); 
+    if(existingUser !=null){
+      return res.status(200).json(existingUser);
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message: "User not found"});
+  }
+} 
 
 
 // export const userinfo = (req, res) => {

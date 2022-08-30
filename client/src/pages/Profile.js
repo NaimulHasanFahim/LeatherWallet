@@ -1,9 +1,11 @@
-import { useEffect } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { getAllTransaction } from '../actions/transactions';
 import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
+import { signinSuccess } from '../redux/userRedux';
 
 const Container = styled.div`
 /* min-height: 692px; */
@@ -116,18 +118,31 @@ const H1 = styled.h1`
   margin-top: 20px;
 `;
 
+const API = axios.create({ baseURL: 'http://localhost:8000/api' });
+
 const Profile = ({isOpen , toggle, user, setUser}) => {
   const dispatch = useDispatch();
+  console.log(user);
+  const [updated, setUpdated] = useState(user);
 
   
+  // console.log(user._id);
+  
+  
   useEffect(() => {
-    
+    async function getUser(id){
+      const {data} = await API.get(`/user/${id}`);
+      // console.log(data);
+      setUpdated(data);
+      dispatch(signinSuccess(data));
+    }
     const getAllTrans = (  )=>{
       dispatch(getAllTransaction(user.accountNumber));
       
     }
 
     getAllTrans();
+    getUser(user._id);
   }, []);
   
   
@@ -149,8 +164,8 @@ const Profile = ({isOpen , toggle, user, setUser}) => {
                 <H3>Balance : {user.balance}</H3>
                <TransactionContainer>
                 <H1>All Transactions</H1>
-                {JSON.stringify(temp) !== '{}' && temp.map((item)=>(<SingleTransaction key={item._id}>
-                  <PaymentLeftWrapper><H3>Method : Payment</H3> 
+                {JSON.stringify(temp) !== '{}' && temp.length !==0  && temp.map((item)=>(<SingleTransaction key={item._id}>
+                  <PaymentLeftWrapper><H3>Method : Online Payment</H3> 
                   <h5> reciever : {item.reciever.accountNumber}</h5>
                   <h6>Transaction ID : {item._id}</h6>
                   </PaymentLeftWrapper>

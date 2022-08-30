@@ -5,19 +5,39 @@ import User from "../models/userSchema.js";
 const router = express.Router();
 
 
+export const verifyTransaction = async (req, res) =>{
+  console.log(req.params.id);
+  try {
+    const data = await Transaction.findById(req.params.id);
+    console.log(data);
+
+    if(data != null){
+      return res.status(200).json({message : "verified"});
+    }
+    else{
+      return res.status(200).json({message : "not verified"});
+    }
+  } catch (error) {
+    return res.status(200).json({message : error.message});
+  }
+};
+
 export const getAllTransactionById = async (req, res) => {
   const { id} = req.params;
-  console.log(id);
+  // console.log(id);
   let transactionList = [];
   try {
     Transaction.find()
       .populate("sender")
       .populate("reciever")
       .exec(function (err, all_transaction) {
+        console.log(all_transaction);
         if (err) return handleError(err);
-        var output =  all_transaction.filter( transaction=> transaction.sender.accountNumber == id, transaction=> transaction.reciever.accountNumber == id);
-        transactionList = output;
-        // console.log(output);
+        all_transaction.map( (transaction)=> { if(transaction.sender.accountNumber == id ||  transaction.reciever.accountNumber == id){
+          transactionList.push(transaction);
+        }});
+        
+        console.log(transactionList);
         return res.status(200).send(transactionList);
       });
   } catch (error) {
@@ -47,8 +67,8 @@ export const payment = async (req, res) => {
     }
 
     // find( { "name.last": "Hopper" } )
-    let temp = await User.find({ accountNumber: sender });
-    const senderExist = temp[0];
+    const temp1 = await User.find({ accountNumber: sender });
+    const senderExist = temp1[0];
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
@@ -61,10 +81,10 @@ export const payment = async (req, res) => {
         message: "No account with the sender account number.",
       });
     } else if (senderExist.balance < amount) {
-      return res.send({ message: "Not a valid ammount !" });
+      return res.send({ message: "Not a enough balance in the account !" });
     }
 
-    temp = await User.find({ accountNumber: reciever });
+    const temp = await User.find({ accountNumber: reciever });
     const recieverExist = temp[0];
 
     if (!recieverExist) {
@@ -80,14 +100,13 @@ export const payment = async (req, res) => {
     // console.log(senderTemp);
     // console.log(recieverTemp);
 
+
     senderTemp.balance = senderTemp.balance - amount;
-    recieverTemp.balance = recieverTemp.balance - amount;
+    recieverTemp.balance = recieverTemp.balance + amount;
 
     const senderUpdated = { ...senderTemp };
     const recieverUpdated = { ...recieverTemp };
-    // console.log(temp1);
-    // console.log(temp2);
-    // console.log(senderExist._doc._id.toString());
+    
     console.log(senderUpdated);
     console.log(recieverUpdated);
 
@@ -112,7 +131,7 @@ export const payment = async (req, res) => {
     console.log(result);
     res.status(200).send({
       message: "Transaction Successfully",
-      Transaction_ID: result._doc._id.toString(),
+      transactionId: result._doc._id.toString(),
     });
   } catch (error) {
     console.log(error);
