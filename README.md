@@ -89,6 +89,18 @@ redux-persist : ^6.0.0| nodemon : ^2.0.16
 styled-components : ^5.3.5 | cors: ^2.8.5
 
 
+# Screenshots of this project
+
+Landing Page of the website
+![Landing page](https://user-images.githubusercontent.com/40023605/187589893-1c6fb88d-b30b-49f4-9180-56f74309102b.png)
+
+User can sign in or sign up
+![User can sign in or sign up](https://user-images.githubusercontent.com/40023605/187589880-44a4ae0f-09bd-4108-b553-03d8b5c137f0.png)
+
+After signing in user can go to account route and can see his/her account details and Transactions
+![After signing in user can go to account route and can see his/her account details and Transactions](https://user-images.githubusercontent.com/40023605/187589887-f63f700f-8808-4f36-965b-f95958f09e9d.png)
+
+
 ## Standard
 
 [![JavaScript Style Guide](https://cdn.rawgit.com/standard/standard/master/badge.svg)](https://github.com/standard/standard)
